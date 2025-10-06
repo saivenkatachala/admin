@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* UPDATED COLOR VARIABLES */
+:root {
+  --primary:#ff7e67; /* A more vibrant primary */
+  --secondary:#da2c43; /* A deep secondary */
+  --accent:#3a86ff; /* Blue accent */
+  --dark:#0f0e17; /* Very dark background */
+  --darker:#16161e; /* Even darker background */
+  --light:#f8f9fa;
+  --success:#06d6a0;
+  --gray:#a2a8b3;
+}
+/* UPDATED BODY BACKGROUND */
+body{
+  background:linear-gradient(135deg,var(--darker),var(--dark),#2b2d42); /* New background */
+  min-height:100vh;color:var(--light);font-family:'Inter',sans-serif;
+  padding: 1rem; /* Added general padding for mobile */
+}
+.login-container,.dashboard-container{
+  background:rgba(22,22,30,0.8);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);border-radius:20px;
+  box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+.form-input{background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.15);}
+.form-input:focus{outline:none;border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));}
+.btn-refresh{background:linear-gradient(135deg,var(--accent),#3a86ff);}
+.btn-success{background:linear-gradient(135deg,var(--success),#05b58a);}
+.btn-logout{background:linear-gradient(135deg,var(--gray),#6c757d);}
+.loading{width:18px;height:18px;border:3px solid rgba(255,255,255,0.3);
+border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+th{background:linear-gradient(135deg,var(--darker),#1a1a2e);
+text-transform:uppercase;font-size:0.8rem;}
+.service-badge{background:rgba(58, 134, 255, 0.2);color:var(--accent);} /* Used accent for badge */
+</style>
+</head>
+<body class="p-4 sm:p-6 flex flex-col items-center justify-center"> <div class="w-full max-w-7xl"> <h1 class="text-4xl sm:text-5xl font-bold mb-8 text-center bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">Admin Portal</h1>
+
+<div id="login" class="max-w-md mx-auto login-container p-8">
+  <h2 class="text-2xl font-semibold mb-6 text-center text-white">Admin Login</h2>
+  <input id="adminUser" placeholder="Enter Username" class="w-full p-3 mb-4 form-input rounded-lg text-white">
+  <input id="adminPass" type="password" placeholder="Enter Password" class="w-full p-3 mb-6 form-input rounded-lg text-white">
+  <button onclick="loginAdmin()" class="btn-primary w-full py-3 rounded-lg flex items-center justify-center">
+    <span id="loginText">Login</span><span id="loginSpinner" class="loading hidden ml-2"></span>
+  </button>
+</div>
+
+<div id="dashboard" class="hidden mt-8 dashboard-container p-4 sm:p-6"> <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"> <h2 class="text-2xl font-semibold mb-4 sm:mb-0 text-white">Service Requests</h2>
+    <div class="flex space-x-2">
+      <button onclick="loadData()" class="btn-refresh px-4 py-2 rounded-lg flex items-center text-sm sm:text-base">
+        <span id="refreshText">Refresh</span><span id="refreshSpinner" class="loading hidden ml-2"></span>
+      </button>
+      <button onclick="logout()" class="btn-logout px-4 py-2 rounded-lg text-sm sm:text-base">Logout</button>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto rounded-lg">
+    <table id="dataTable" class="w-full text-xs sm:text-sm"> <thead>
+        <tr>
+          <th class="px-3 py-2 text-left whitespace-nowrap">Time</th> 
+          <th class="px-3 py-2 text-left whitespace-nowrap">Service</th>
+          <th class="px-3 py-2 text-left whitespace-nowrap">Name</th>
+          <th class="px-3 py-2 text-left">Email</th>
+          <th class="px-3 py-2 text-left">Phone</th>
+          <th class="px-3 py-2 text-left">Message</th>
+          <th class="px-3 py-2 text-left whitespace-nowrap">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody" class="text-gray-200"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+const webAppURL = "https://script.google.com/macros/s/AKfycbzjD_JXiSuHnB9CTfe5MJ2WtWmP70570bcFAD_3Gq-50TCis6VhoJpo_2flco8f1ICqAA/exec"; // 🔹 Replace this
+const adminUsername = "admin";
+const adminPassword = "12345";
+
+function loginAdmin(){
+  const user=document.getElementById("adminUser").value;
+  const pass=document.getElementById("adminPass").value;
+  document.getElementById("loginText").classList.add("hidden");
+  document.getElementById("loginSpinner").classList.remove("hidden");
+  setTimeout(()=>{
+    if(user===adminUsername && pass===adminPassword){
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      loadData();
+    }else alert("Invalid login details");
+    document.getElementById("loginText").classList.remove("hidden");
+    document.getElementById("loginSpinner").classList.add("hidden");
+  },700);
+}
+
+async function loadData(){
+  document.getElementById("refreshText").classList.add("hidden");
+  document.getElementById("refreshSpinner").classList.remove("hidden");
+  try{
+    const res=await fetch(`${webAppURL}?action=getData`);
+    const data=await res.json();
+    const tbody=document.getElementById("tableBody");
+    tbody.innerHTML="";
+    data.forEach((d,i)=>{
+      const tr=document.createElement("tr");
+      // Use index i for data-row-index, which is needed for the delete fix
+      tr.innerHTML=`
+      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.timestamp}</td>
+      <td class='px-3 py-2 text-xs sm:text-sm'><span class='service-badge px-2 py-0.5 rounded-full text-xs'>${d.service}</span></td>
+      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.name}</td>
+      <td class='px-3 py-2 text-xs sm:text-sm'>${d.email}</td>
+      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.number}</td>
+      <td class='px-3 py-2 text-xs sm:text-sm'>${d.message}</td>
+      <td class='px-3 py-2 space-x-1 flex flex-col sm:flex-row items-start sm:items-center'>
+        <button onclick="sendMail('${d.email}','${d.name}','${d.service}')" class='btn-success px-2 py-1 rounded-lg text-xs sm:text-sm mb-1 sm:mb-0'>Mail</button>
+        <button onclick="markDelivered('${encodeURIComponent(d.timestamp)}', ${i + 2})" class='btn-logout px-2 py-1 rounded-lg bg-red-600 text-xs sm:text-sm'>Done</button>
+      </td>`;
+      tbody.appendChild(tr);
+    });
+  }catch(e){alert("Error loading data: " + e.message)}
+  document.getElementById("refreshText").classList.remove("hidden");
+  document.getElementById("refreshSpinner").classList.add("hidden");
+}
+
+async function sendMail(email,name,service){
+  alert(`Simulated mail to ${name} (${email}) for ${service}`);
+  await fetch(`${webAppURL}?action=sendMail&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&service=${encodeURIComponent(service)}`);
+}
+
+// **CLIENT-SIDE FIX:** The function signature is updated to *also* pass the row index.
+async function markDelivered(timestamp, rowIndex){
+  if(!confirm("Mark this as delivered and remove from sheet?"))return;
+  try{
+    // Pass both timestamp (as a fallback/verification) and the calculated rowIndex
+    const res=await fetch(`${webAppURL}?action=deleteRow&timestamp=${timestamp}&rowIndex=${rowIndex}`);
+    const text=await res.text();
+    alert(text);
+    loadData();
+  }catch(e){alert("Error marking delivered")}
+}
+
+function logout(){
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("adminUser").value="";
+  document.getElementById("adminPass").value="";
+}
+</script>
+</body>
+</html>
