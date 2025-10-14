@@ -7,153 +7,589 @@
 <title>Admin Portal</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* UPDATED COLOR VARIABLES */
+/* UPDATED COLOR VARIABLES FOR LIGHT THEME */
 :root {
-  --primary:#ff7e67; /* A more vibrant primary */
-  --secondary:#da2c43; /* A deep secondary */
-  --accent:#3a86ff; /* Blue accent */
-  --dark:#0f0e17; /* Very dark background */
-  --darker:#16161e; /* Even darker background */
-  --light:#f8f9fa;
-  --success:#06d6a0;
-  --gray:#a2a8b3;
+  --primary: #c9513e; /* A warm, inviting primary */
+  --secondary: #a32a3c; /* A deeper secondary */
+  --accent: #007bff; /* Blue accent */
+  --light-bg: #DDD0C8; /* Requested background */
+  --card-bg: #FFFFFF; /* White card background */
+  --text-dark: #333333; /* Dark gray text */
+  --gray-light: #f1f1f1;
+  --success: #28a745;
+  --gray-btn: #6c757d;
 }
-/* UPDATED BODY BACKGROUND */
-body{
-  background:linear-gradient(135deg,var(--darker),var(--dark),#2b2d42); /* New background */
-  min-height:100vh;color:var(--light);font-family:'Inter',sans-serif;
-  padding: 1rem; /* Added general padding for mobile */
+
+/* UPDATED BODY BACKGROUND & TEXT */
+body {
+  background-color: var(--light-bg);
+  min-height: 100vh;
+  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.login-container,.dashboard-container{
-  background:rgba(22,22,30,0.8);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.1);border-radius:20px;
-  box-shadow:0 15px 35px rgba(0,0,0,0.4);
+
+/* LOGIN CONTAINER STYLES (Light Theme) */
+.login-container {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px 35px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.form-input{background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.15);}
-.form-input:focus{outline:none;border-color:var(--accent);}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));}
-.btn-refresh{background:linear-gradient(135deg,var(--accent),#3a86ff);}
-.btn-success{background:linear-gradient(135deg,var(--success),#05b58a);}
-.btn-logout{background:linear-gradient(135deg,var(--gray),#6c757d);}
-.loading{width:18px;height:18px;border:3px solid rgba(255,255,255,0.3);
-border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-th{background:linear-gradient(135deg,var(--darker),#1a1a2e);
-text-transform:uppercase;font-size:0.8rem;}
-.service-badge{background:rgba(58, 134, 255, 0.2);color:var(--accent);} /* Used accent for badge */
+
+.login-container:hover {
+  transform: translateY(-5px) rotateX(3deg);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.shop-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.shop-tagline {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 25px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.login-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 2px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.input-container {
+  position: relative;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  padding: 14px 18px 14px 45px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', sans-serif;
+  background: #fafbfc;
+  color: var(--text-dark);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(201, 81, 62, 0.1);
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  font-size: 18px;
+}
+
+/* BUTTON STYLES (Updated Gradients) */
+.btn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%);
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(201, 81, 62, 0.3);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.credentials {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  border-left: 4px solid var(--primary);
+}
+
+.credentials p {
+  margin-bottom: 5px;
+}
+
+.error-message {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  padding: 12px;
+  border-radius: 12px;
+  margin: 15px 0;
+  text-align: center;
+  border: 1px solid #f5c6cb;
+  font-weight: 500;
+  display: none;
+}
+
+/* DASHBOARD CONTAINER STYLES (Light Theme) */
+.dashboard-container {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* LOADING SPINNER (Darker border for light background) */
+.loading {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* TABLE STYLES (Light Theme) */
+th {
+  background-color: #e9ecef;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+#dataTable tr:nth-child(even) {
+  background-color: var(--gray-light);
+}
+
+/* BUTTON STYLES FOR DASHBOARD */
+.btn-refresh {
+  background: linear-gradient(135deg, var(--accent), #1565c0);
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success), #1e7e34);
+  color: white;
+}
+
+.btn-logout {
+  background: linear-gradient(135deg, var(--gray-btn), #495057);
+  color: white;
+}
+
+/* BADGE STYLES */
+.service-badge {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- MOBILE RESPONSIVENESS: DATA CARD VIEW --- */
+
+/* Hide table headers on small screens */
+@media (max-width: 767px) {
+  #dataTable thead {
+    display: none;
+  }
+
+  #dataTable tbody {
+    display: block;
+  }
+  
+  /* Each table row becomes a 'data card' */
+  #dataTable tr {
+    display: block;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--card-bg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Each table data cell becomes a labelled block */
+  #dataTable td {
+    display: block;
+    text-align: right !important;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px dotted #e9ecef;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  /* DATA LABELLING: Inject the label using the data-label attribute */
+  #dataTable td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.75rem;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+  
+  /* Special styling for the action buttons block */
+  #dataTable td:last-child {
+    border-bottom: none;
+    text-align: left !important;
+    padding-left: 0.75rem;
+  }
+  
+  /* Login container adjustments for mobile */
+  .login-container {
+    padding: 30px 25px;
+  }
+  
+  .shop-name {
+    font-size: 1.6rem;
+  }
+  
+  .login-title {
+    font-size: 1.3rem;
+  }
+  
+  .form-input {
+    padding: 12px 15px 12px 40px;
+  }
+  
+  .input-icon {
+    font-size: 16px;
+    left: 12px;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 25px 20px;
+  }
+  
+  .shop-name {
+    font-size: 1.4rem;
+  }
+  
+  .login-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-input {
+    padding: 11px 14px 11px 38px;
+    font-size: 15px;
+  }
+  
+  .input-icon {
+    font-size: 15px;
+  }
+  
+  .btn {
+    padding: 11px 18px;
+    font-size: 15px;
+  }
+}
+
+/* Shake animation for login errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotateX(3deg); }
+  20%, 60% { transform: translateX(-10px) rotateX(3deg); }
+  40%, 80% { transform: translateX(10px) rotateX(3deg); }
+}
+
+/* Focus styles for accessibility */
+.form-input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
 </style>
 </head>
-<body class="p-4 sm:p-6 flex flex-col items-center justify-center"> <div class="w-full max-w-7xl"> <h1 class="text-4xl sm:text-5xl font-bold mb-8 text-center bg-gradient-to-r from-red-400 to-pink-500 bg-clip-text text-transparent">Admin Portal</h1>
-
-<div id="login" class="max-w-md mx-auto login-container p-8">
-  <h2 class="text-2xl font-semibold mb-6 text-center text-white">Admin Login</h2>
-  <input id="adminUser" placeholder="Enter Username" class="w-full p-3 mb-4 form-input rounded-lg text-white">
-  <input id="adminPass" type="password" placeholder="Enter Password" class="w-full p-3 mb-6 form-input rounded-lg text-white">
-  <button onclick="loginAdmin()" class="btn-primary w-full py-3 rounded-lg flex items-center justify-center">
-    <span id="loginText">Login</span><span id="loginSpinner" class="loading hidden ml-2"></span>
-  </button>
-</div>
-
-<div id="dashboard" class="hidden mt-8 dashboard-container p-4 sm:p-6"> <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"> <h2 class="text-2xl font-semibold mb-4 sm:mb-0 text-white">Service Requests</h2>
-    <div class="flex space-x-2">
-      <button onclick="loadData()" class="btn-refresh px-4 py-2 rounded-lg flex items-center text-sm sm:text-base">
-        <span id="refreshText">Refresh</span><span id="refreshSpinner" class="loading hidden ml-2"></span>
+<body>
+  <div id="login" class="login-container">
+    <div class="login-header">
+      <div class="shop-name">Perfect Cards and Printers</div>
+      <div class="shop-tagline">Quality Printing Solutions Since 2010</div>
+    </div>
+    
+    <div class="login-title">Admin Login</div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="adminUser">Username</label>
+        <div class="input-container">
+          <span class="input-icon">👤</span>
+          <input type="text" id="adminUser" placeholder="Enter username" class="form-input" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="adminPass">Password</label>
+        <div class="input-container">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="adminPass" placeholder="Enter password" class="form-input" required>
+        </div>
+      </div>
+      
+      <div class="error-message" id="errorMessage">
+        Invalid username or password. Please try again.
+      </div>
+      
+      <button type="submit" class="btn btn-primary">
+        <span id="loginText">Login</span>
+        <span id="loginSpinner" class="loading hidden ml-2"></span>
       </button>
-      <button onclick="logout()" class="btn-logout px-4 py-2 rounded-lg text-sm sm:text-base">Logout</button>
+      
+      <div class="login-footer">
+        <div class="credentials">
+          <p><strong>Demo Credentials:</strong></p>
+          <p>Username: Perfect98cards</p>
+          <p>Password: jaweed1968</p>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="dashboard" class="hidden mt-8 dashboard-container">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <h2 class="text-2xl font-semibold mb-4 sm:mb-0" style="color:var(--text-dark);">Service Requests</h2>
+      <div class="flex space-x-2">
+        <button onclick="loadData()" class="btn-refresh px-4 py-2 rounded-lg flex items-center text-sm sm:text-base">
+          <span id="refreshText">Refresh</span><span id="refreshSpinner" class="loading hidden ml-2"></span>
+        </button>
+        <button onclick="logout()" class="btn-logout px-4 py-2 rounded-lg text-sm sm:text-base">Logout</button>
+      </div>
+    </div>
+
+    <div id="table-wrapper" class="rounded-lg">
+      <table id="dataTable" class="w-full text-xs sm:text-sm">
+        <thead>
+          <tr>
+            <th class="px-3 py-2 text-left whitespace-nowrap">Time</th>
+            <th class="px-3 py-2 text-left whitespace-nowrap">Service</th>
+            <th class="px-3 py-2 text-left whitespace-nowrap">Name</th>
+            <th class="px-3 py-2 text-left">Email</th>
+            <th class="px-3 py-2 text-left">Phone</th>
+            <th class="px-3 py-2 text-left">Message</th>
+            <th class="px-3 py-2 text-left whitespace-nowrap">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
     </div>
   </div>
 
-  <div class="overflow-x-auto rounded-lg">
-    <table id="dataTable" class="w-full text-xs sm:text-sm"> <thead>
-        <tr>
-          <th class="px-3 py-2 text-left whitespace-nowrap">Time</th> 
-          <th class="px-3 py-2 text-left whitespace-nowrap">Service</th>
-          <th class="px-3 py-2 text-left whitespace-nowrap">Name</th>
-          <th class="px-3 py-2 text-left">Email</th>
-          <th class="px-3 py-2 text-left">Phone</th>
-          <th class="px-3 py-2 text-left">Message</th>
-          <th class="px-3 py-2 text-left whitespace-nowrap">Action</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody" class="text-gray-200"></tbody>
-    </table>
-  </div>
-</div>
-</div>
-
 <script>
-const webAppURL = "https://script.google.com/macros/s/AKfycbwexeOz2IWXtxdQWtudtFuBQ8hPSOIBRTRL1_NV-n7a1OPQiI8myP5Yz3Fyr9bFG3aM/exec"; // 🔹 Replace this
-const adminUsername = "Perfect98cards";
-const adminPassword = "jaweed1968";
+  const webAppURL = "https://script.google.com/macros/s/AKfycbwexeOz2IWXtxdQWtudtFuBQ8hPSOIBRTRL1_NV-n7a1OPQiI8myP5Yz3Fyr9bFG3aM/exec";
+  const adminUsername = "Perfect98cards";
+  const adminPassword = "jaweed1968";
 
-function loginAdmin(){
-  const user=document.getElementById("adminUser").value;
-  const pass=document.getElementById("adminPass").value;
-  document.getElementById("loginText").classList.add("hidden");
-  document.getElementById("loginSpinner").classList.remove("hidden");
-  setTimeout(()=>{
-    if(user===adminUsername && pass===adminPassword){
-      document.getElementById("login").classList.add("hidden");
-      document.getElementById("dashboard").classList.remove("hidden");
+  // Login functionality with enhanced UI
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    loginAdmin();
+  });
+
+  function loginAdmin(){
+    const user = document.getElementById("adminUser").value;
+    const pass = document.getElementById("adminPass").value;
+    const errorMessage = document.getElementById("errorMessage");
+    const loginCard = document.querySelector('.login-container');
+    
+    document.getElementById("loginText").classList.add("hidden");
+    document.getElementById("loginSpinner").classList.remove("hidden");
+    
+    setTimeout(() => {
+      if(user === adminUsername && pass === adminPassword){
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        loadData();
+        errorMessage.style.display = 'none';
+      } else {
+        errorMessage.style.display = 'block';
+        // Add shake animation to form
+        loginCard.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          loginCard.style.animation = '';
+        }, 500);
+      }
+      document.getElementById("loginText").classList.remove("hidden");
+      document.getElementById("loginSpinner").classList.add("hidden");
+    }, 700);
+  }
+
+  async function loadData(){
+    document.getElementById("refreshText").classList.add("hidden");
+    document.getElementById("refreshSpinner").classList.remove("hidden");
+    try{
+      const res = await fetch(`${webAppURL}?action=getData`);
+      const data = await res.json();
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+      data.forEach((d, i) => {
+        const tr = document.createElement("tr");
+        // Use index i for data-row-index, which is needed for the delete fix
+        tr.innerHTML = `
+        <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap' data-label="Time">${d.timestamp}</td>
+        <td class='px-3 py-2 text-xs sm:text-sm' data-label="Service"><span class='service-badge px-2 py-0.5 rounded-full text-xs'>${d.service}</span></td>
+        <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap' data-label="Name">${d.name}</td>
+        <td class='px-3 py-2 text-xs sm:text-sm' data-label="Email">${d.email}</td>
+        <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap' data-label="Phone">${d.number}</td>
+        <td class='px-3 py-2 text-xs sm:text-sm' data-label="Message">${d.message}</td>
+        <td class='px-3 py-2 space-x-1 flex flex-col sm:flex-row items-start sm:items-center'>
+          <button onclick="sendMail('${d.email}','${d.name}','${d.service}')" class='btn-success px-2 py-1 rounded-lg text-xs sm:text-sm mb-1 sm:mb-0'>Mail</button>
+          <button onclick="markDelivered('${encodeURIComponent(d.timestamp)}', ${i + 2})" class='btn-logout px-2 py-1 rounded-lg bg-red-600 text-xs sm:text-sm'>Done</button>
+        </td>`;
+        tbody.appendChild(tr);
+      });
+    } catch(e) {
+      alert("Error loading data: " + e.message);
+    }
+    document.getElementById("refreshText").classList.remove("hidden");
+    document.getElementById("refreshSpinner").classList.add("hidden");
+  }
+
+  async function sendMail(email, name, service){
+    alert(`Simulated mail to ${name} (${email}) for ${service}`);
+    await fetch(`${webAppURL}?action=sendMail&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&service=${encodeURIComponent(service)}`);
+  }
+
+  // **CLIENT-SIDE FIX:** The function signature is updated to *also* pass the row index.
+  async function markDelivered(timestamp, rowIndex){
+    if(!confirm("Mark this as delivered and remove from sheet?")) return;
+    try{
+      // Pass both timestamp (as a fallback/verification) and the calculated rowIndex
+      const res = await fetch(`${webAppURL}?action=deleteRow&timestamp=${timestamp}&rowIndex=${rowIndex}`);
+      const text = await res.text();
+      alert(text);
       loadData();
-    }else alert("Invalid login details");
-    document.getElementById("loginText").classList.remove("hidden");
-    document.getElementById("loginSpinner").classList.add("hidden");
-  },700);
-}
+    } catch(e) {
+      alert("Error marking delivered");
+    }
+  }
 
-async function loadData(){
-  document.getElementById("refreshText").classList.add("hidden");
-  document.getElementById("refreshSpinner").classList.remove("hidden");
-  try{
-    const res=await fetch(`${webAppURL}?action=getData`);
-    const data=await res.json();
-    const tbody=document.getElementById("tableBody");
-    tbody.innerHTML="";
-    data.forEach((d,i)=>{
-      const tr=document.createElement("tr");
-      // Use index i for data-row-index, which is needed for the delete fix
-      tr.innerHTML=`
-      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.timestamp}</td>
-      <td class='px-3 py-2 text-xs sm:text-sm'><span class='service-badge px-2 py-0.5 rounded-full text-xs'>${d.service}</span></td>
-      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.name}</td>
-      <td class='px-3 py-2 text-xs sm:text-sm'>${d.email}</td>
-      <td class='px-3 py-2 text-xs sm:text-sm whitespace-nowrap'>${d.number}</td>
-      <td class='px-3 py-2 text-xs sm:text-sm'>${d.message}</td>
-      <td class='px-3 py-2 space-x-1 flex flex-col sm:flex-row items-start sm:items-center'>
-        <button onclick="sendMail('${d.email}','${d.name}','${d.service}')" class='btn-success px-2 py-1 rounded-lg text-xs sm:text-sm mb-1 sm:mb-0'>Mail</button>
-        <button onclick="markDelivered('${encodeURIComponent(d.timestamp)}', ${i + 2})" class='btn-logout px-2 py-1 rounded-lg bg-red-600 text-xs sm:text-sm'>Done</button>
-      </td>`;
-      tbody.appendChild(tr);
-    });
-  }catch(e){alert("Error loading data: " + e.message)}
-  document.getElementById("refreshText").classList.remove("hidden");
-  document.getElementById("refreshSpinner").classList.add("hidden");
-}
-
-async function sendMail(email,name,service){
-  alert(`Simulated mail to ${name} (${email}) for ${service}`);
-  await fetch(`${webAppURL}?action=sendMail&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&service=${encodeURIComponent(service)}`);
-}
-
-// **CLIENT-SIDE FIX:** The function signature is updated to *also* pass the row index.
-async function markDelivered(timestamp, rowIndex){
-  if(!confirm("Mark this as delivered and remove from sheet?"))return;
-  try{
-    // Pass both timestamp (as a fallback/verification) and the calculated rowIndex
-    const res=await fetch(`${webAppURL}?action=deleteRow&timestamp=${timestamp}&rowIndex=${rowIndex}`);
-    const text=await res.text();
-    alert(text);
-    loadData();
-  }catch(e){alert("Error marking delivered")}
-}
-
-function logout(){
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("login").classList.remove("hidden");
-  document.getElementById("adminUser").value="";
-  document.getElementById("adminPass").value="";
-}
+  function logout(){
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("login").classList.remove("hidden");
+    document.getElementById("adminUser").value = "";
+    document.getElementById("adminPass").value = "";
+    document.getElementById("errorMessage").style.display = "none";
+  }
 </script>
 </body>
 </html>
